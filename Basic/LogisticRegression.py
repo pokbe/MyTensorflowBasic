@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
-epochs = 500
+epochs = 100
 batch_size = 100
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -35,5 +35,5 @@ print("Training Done !")
 
 cor = sess.run(correct,feed_dict={input_data:mnist.test.images, input_label:mnist.test.labels})
 correct_rate = tf.reduce_sum(cor)/mnist.test.num_examples
-print("Test Accuracy: " ,cor_rate)
+print("Test Accuracy: " ,sess.run(correct_rate))
 sess.close()
