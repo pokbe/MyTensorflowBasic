@@ -33,7 +33,7 @@ def BiLSTM_model(input_raw, w, b):
 	bw_cell = tf.nn.rnn_cell.BasicLSTMCell(num_hidden, forget_bias=0.9)
 
 	outputs, output_state_fw, output_state_bw = tf.nn.bidirectional_rnn(fw_cell, bw_cell, input_list, dtype = tf.float32)
-	result = tf.add(tf.matmul(outputs, w['out']),b['out'])
+	result = tf.add(tf.matmul(outputs[-1], w['out']),b['out'])
 	return result
 
 predict_label = BiLSTM_model(input_feature_reshape, weights , biases)
@@ -44,7 +44,7 @@ correct = tf.cast(tf.equal(tf.argmax(predict_label, 1), tf.argmax(input_label, 1
 correct_rate = tf.reduce_mean(correct)
 
 sess = tf.Session()
-sess.run(initialize_all_variables())
+sess.run(tf.initialize_all_variables())
 batch_total = mnist.train.num_examples//batch_size
 for epoch in range(epochs):
 	cost_sum = 0.0
@@ -61,3 +61,18 @@ print("Test Accuracy : ", correct_result)
 sess.close()
 
 print("Done !!")
+'''
+Epoch  0  Cost :  0.440955933107 Correct rate:  0.94
+Epoch  1  Cost :  0.132611812665 Correct rate:  0.95
+Epoch  2  Cost :  0.0912582241879 Correct rate:  0.94
+Epoch  3  Cost :  0.0703170440566 Correct rate:  0.95
+Epoch  4  Cost :  0.0598792035556 Correct rate:  0.98
+Epoch  5  Cost :  0.0512176089217 Correct rate:  1.0
+Epoch  6  Cost :  0.0424408157191 Correct rate:  0.99
+Epoch  7  Cost :  0.0374108020504 Correct rate:  0.99
+Epoch  8  Cost :  0.0324142855895 Correct rate:  0.99
+Epoch  9  Cost :  0.0289846778229 Correct rate:  1.0
+Training Done !!!
+Test Accuracy :  0.9862
+Done !!
+'''
