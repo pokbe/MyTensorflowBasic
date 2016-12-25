@@ -42,3 +42,22 @@ optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 
 correct = tf.cast(tf.equal(tf.argmax(predict_label, 1), tf.argmax(input_label, 1)) , tf.float32)
 correct_rate = tf.reduce_mean(correct)
+
+sess = tf.Session()
+sess.run(initialize_all_variables())
+batch_total = mnist.train.num_examples//batch_size
+for epoch in range(epochs):
+	cost_sum = 0.0
+	for batch in range(batch_total):
+		batch_feature,batch_label = mnist.train.next_batch(batch_size)
+		_, cost_receive, cor_rate = sess.run([optimizer,cost,correct_rate],feed_dict={input_feature:batch_feature, input_label:batch_label})
+		cost_sum += cost_receive
+	cost_avg = cost_sum/batch_total
+	print("Epoch ", epoch , " Cost : ", cost_avg, "Correct rate: ",cor_rate)
+print("Training Done !!!")
+
+correct_result = sess.run(correct_rate, feed_dict={input_feature:mnist.test.images, input_label:mnist.test.labels})
+print("Test Accuracy : ", correct_result)
+sess.close()
+
+print("Done !!")
