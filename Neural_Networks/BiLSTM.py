@@ -36,3 +36,9 @@ def BiLSTM_model(input_raw, w, b):
 	result = tf.add(tf.matmul(outputs, w['out']),b['out'])
 	return result
 
+predict_label = BiLSTM_model(input_feature_reshape, weights , biases)
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(predict_label, input_label))
+optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
+
+correct = tf.cast(tf.equal(tf.argmax(predict_label, 1), tf.argmax(input_label, 1)) , tf.float32)
+correct_rate = tf.reduce_mean(correct)
