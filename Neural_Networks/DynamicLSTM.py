@@ -4,9 +4,11 @@ import random
 
 class SequenceDataGeneration(object):
 	def __init__(self, num_examples, max_seq_len, min_seq_len, max_value):
+		self.num_examples = num_examples
 		self.features = []
 		self.labels = []
 		self.lengths = []
+
 		for example in range(num_examples):
 			example_length = random.randint(min_seq_len,max_seq_len)  #Return a random integer N such that a <= N <= b
 			self.lengths.append(example_length)
@@ -23,14 +25,16 @@ class SequenceDataGeneration(object):
 				self.labels.append([0.0, 1.0])
 		self.batch_index = 0
 	def next_batch(self, batch_size):
-		if self.batch_index = num_examples-1:
+		if self.batch_index = self.num_examples:
 			self.batch_index = 0
-		batch_features = self.features[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
-		batch_labels = self.labels[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
-		batch_lengths = self.lengths[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
+		batch_features = self.features[self.batch_index : min(self.batch_index+batch_size , self.num_examples )]
+		batch_labels = self.labels[self.batch_index : min(self.batch_index+batch_size , self.num_examples )]
+		batch_lengths = self.lengths[self.batch_index : min(self.batch_index+batch_size , self.num_examples )]
+		batch_index = min(self.batch_index+batch_size , self.num_examples )
 		return batch_features, batch_labels, batch_lengths
 
 max_len = 50
+min_len = 5
 max_value = 500
 
 num_input = 1
@@ -67,3 +71,27 @@ optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 correct = tf.cast(tf.equal(tf.argmax(predict_label, 1), tf.argmax(input_labels, 1)) , tf.float32)
 correct_rate = tf.reduce_mean(correct)
 
+train_data = SequenceDataGeneration(num_examples = 1000, max_seq_len=max_len, min_seq_len=min_len, max_value=max_value)
+test_data = SequenceDataGeneration(num_examples = 500, max_seq_len=max_len, min_seq_len=min_len, max_value=max_value)
+
+epochs = 10
+batch_size = 50
+
+sess = tf.Session()
+sess.run(tf.initialize_all_variables())
+batch_total = train_data.num_examples//batch_size
+for epoch in range(epochs):
+	cost_sum = 0.0
+	for batch in range(batch_total):
+		batch_features, batch_labels, batch_lengths = train_data.next_batch(batch_size)
+		_, cost_receive, cor_rate = sess.run([optimizer,cost,correct_rate],feed_dict={input_features:batch_features, input_labels:batch_labels, input_lengths:batch_lengths})
+		cost_sum += cost_receive
+	cost_avg = cost_sum/batch_total
+	print("Epoch ", epoch , " Cost : ", cost_avg, "Correct rate: ",cor_rate)
+print("Training Done !!!")
+
+correct_result = sess.run(correct_rate, feed_dict={input_features:test_data.features, input_labels:test_data.labels, input_lengths:test_data.lengths})
+print("Test Accuracy : ", correct_result)
+sess.close()
+
+print("Done !!")
