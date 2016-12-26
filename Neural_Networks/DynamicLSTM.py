@@ -22,5 +22,10 @@ class SequenceDataGeneration(object):
 				self.features.append(sequence)
 				self.labels.append([0.0, 1.0])
 		self.batch_index = 0
-
-
+	def next_batch(self, batch_size):
+		if self.batch_index = num_examples-1:
+			self.batch_index = 0
+		batch_features = self.features[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
+		batch_labels = self.labels[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
+		batch_lengths = self.lengths[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
+		return batch_features, batch_labels, batch_lengths
