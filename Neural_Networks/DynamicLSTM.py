@@ -29,3 +29,41 @@ class SequenceDataGeneration(object):
 		batch_labels = self.labels[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
 		batch_lengths = self.lengths[self.batch_index, min(self.batch_index+batch_size , num_examples-1)]
 		return batch_features, batch_labels, batch_lengths
+
+max_len = 50
+max_value = 500
+
+num_input = 1
+num_step = max_len
+num_hidden = 100
+num_class = 2
+
+input_features = tf.placeholder(tf.float32,[None,num_step*num_input])
+input_feature_reshape = tf.reshape(input_features,[-1,num_step,num_input])
+input_labels = tf.placeholder(tf.float32,[None,num_class])
+input_lengths = tf.placeholder(tf.int32,[None])
+
+weights = {
+	'out' : tf.Variable(tf.random_normal([2*num_hidden,num_class]))
+}
+biases = {
+	'out' : tf.Variable(tf.random_normal([num_class]))
+}
+
+def BiLSTM_model(input_raw, s_len, w, b):
+	input_list = tf.unpack(input_raw, axis=1)
+
+	fw_cell = tf.nn.rnn_cell.BasicLSTMCell(num_hidden, forget_bias=0.9)
+	bw_cell = tf.nn.rnn_cell.BasicLSTMCell(num_hidden, forget_bias=0.9)
+
+	outputs, output_state_fw, output_state_bw = tf.nn.bidirectional_rnn(fw_cell, bw_cell, input_list, sequence_length=s_len,dtype = tf.float32)
+	result = tf.add(tf.matmul(outputs[-1], w['out']),b['out'])
+	return result
+
+predict_label = BiLSTM_model(input_feature_reshape, input_lengths, weights , biases)
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(predict_label, input_labels))
+optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
+
+correct = tf.cast(tf.equal(tf.argmax(predict_label, 1), tf.argmax(input_labels, 1)) , tf.float32)
+correct_rate = tf.reduce_mean(correct)
+
