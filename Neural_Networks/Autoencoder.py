@@ -42,3 +42,16 @@ revert_feature = decoder_model(encode_feature, weights, biases)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(revert_feature, input_feature))
 optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 
+sess = tf.Session()
+sess.run(tf.initialize_all_variables())
+batch_total = mnist.train.num_examples//batch_size
+for epoch in range(epochs):
+	cost_sum = 0.0
+	for batch in batch_total:
+		batch_feature, batch_label = mnist.train.next_batch(batch_size)
+		_ , cost_receive = sess.run([op, cost], feed_dict={input_feature:batch_feature})
+		cost_sum += cost_receive
+	cost_avg = cost_sum/batch_total
+	print("Epoch ", epoch , " Cost : ", cost_avg)
+	print("Autoencoder Building Done !!!")
+sess.close()
