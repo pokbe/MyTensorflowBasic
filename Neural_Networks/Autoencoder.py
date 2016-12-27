@@ -1,15 +1,18 @@
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-epochs = 15
+epochs = 200
 batch_size = 100
 
 num_input = 784
 num_hidden_1 = 300
 num_hidden_2 = 150
+
+num_show = 10
 
 input_feature = tf.placeholder(tf.float32,[None,num_input])
 
@@ -47,11 +50,22 @@ sess.run(tf.initialize_all_variables())
 batch_total = mnist.train.num_examples//batch_size
 for epoch in range(epochs):
 	cost_sum = 0.0
-	for batch in batch_total:
+	for batch in range(batch_total):
 		batch_feature, batch_label = mnist.train.next_batch(batch_size)
-		_ , cost_receive = sess.run([op, cost], feed_dict={input_feature:batch_feature})
+		_ , cost_receive = sess.run([optimizer, cost], feed_dict={input_feature:batch_feature})
 		cost_sum += cost_receive
 	cost_avg = cost_sum/batch_total
 	print("Epoch ", epoch , " Cost : ", cost_avg)
-	print("Autoencoder Building Done !!!")
+print("Autoencoder Building Done !!!")
+
+test_revert = sess.run(revert_feature, feed_dict={input_feature: mnist.test.images[:num_show]})
+f, a = plt.subplots(2, num_show)
+for i in range(num_show):
+	a[0][i].imshow(np.reshape(mnist.test.images[i], (28, 28)))
+	a[1][i].imshow(np.reshape(test_revert[i], (28, 28)))
+f.show()
+plt.draw()
+plt.waitforbuttonpress()
+
 sess.close()
+print('Test Show Over')
