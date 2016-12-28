@@ -59,9 +59,9 @@ for epoch in range(epochs):
 	#cost_sum = 0.0
 	for batch in range(batch_total):
 		batch_feature , batch_label = mnist.train.next_batch(batch_size)
-		_ , cost_receive,cor_rate = sess.run([optimizer, cost, correct_rate], feed_dict={input_feature:batch_feature, input_label:batch_label})
+		_ , summary_receive = sess.run([optimizer, merged_summary], feed_dict={input_feature:batch_feature, input_label:batch_label})
 		#cost_sum += cost_receive
-		summary_writer.add_summary(summary, epoch * total_batch + i)
+		summary_writer.add_summary(summary_receive, epoch * batch_total + batch)
 	#cost_avg = cost_sum/batch_total
 	#print("Epoch ", epoch , " Cost : ", cost_avg, "Correct rate: ",cor_rate)
 print("Training Done!")
@@ -72,4 +72,4 @@ sess.close()
 print("Done!")
 print("Run the command line:\n" \
           "--> tensorboard --logdir=%s " \
-          "\nThen open http://127.0.1.1:6006/ into your web browser" % log_path
+          "\nThen open http://127.0.1.1:6006/ into your web browser" % log_path)
