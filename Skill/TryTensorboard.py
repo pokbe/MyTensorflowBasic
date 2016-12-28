@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-epochs = 10
+epochs = 3
 batch_size = 100
 
 num_input = 28
@@ -42,18 +42,19 @@ with tf.name_scope('Cost'):
 with tf.name_scope('Adam_Optimizer'):
 	optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 
-with tf.name_scope('Accuracy'):	
-	correct = tf.cast(tf.equal(tf.argmax(predict_label,1),tf.argmax(input_label,1)),tf.float32)
-	correct_rate = tf.reduce_mean(correct)
+#with tf.name_scope('Accuracy'):	
+correct = tf.cast(tf.equal(tf.argmax(predict_label,1),tf.argmax(input_label,1)),tf.float32)
+correct_rate = tf.reduce_mean(correct)
 
 tf.scalar_summary("Cost", cost)
 tf.scalar_summary("Accuracy", correct_rate)
 merged_summary = tf.merge_all_summaries()
 
-summary_writer = tf.train.SummaryWriter(log_path, graph=tf.get_default_graph())
-
 sess = tf.Session()
 sess.run(tf.initialize_all_variables())
+
+summary_writer = tf.train.SummaryWriter(log_path, graph=tf.get_default_graph())
+
 batch_total = mnist.train.num_examples//batch_size
 for epoch in range(epochs):
 	#cost_sum = 0.0
