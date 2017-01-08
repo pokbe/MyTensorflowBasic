@@ -86,7 +86,7 @@ random.shuffle(dataset)
 
 test_rate = 0.3
 batch_size = 30
-epochs = 50
+epochs = 30
 
 dataset = np.array(dataset)
 #print(dataset)
@@ -164,8 +164,8 @@ for epoch in range(epochs):
 	print("Epoch ", epoch , " Cost : ", cost_avg)
 
 correct_result = sess.run(correct_rate,feed_dict={
-		input_feature:list(test_data[batch*batch_size:(batch+1)*batch_size][:,0]), 
-		input_label:list(test_data[batch*batch_size:(batch+1)*batch_size][:,1])
+		input_feature:list(test_data[:,0]), 
+		input_label:list(test_data[:,1])
 		})
 print("Test Accuracy : ", correct_result)
 
