@@ -170,3 +170,37 @@ correct_result = sess.run(correct_rate,feed_dict={
 print("Test Accuracy : ", correct_result)
 
 sess.close()
+
+'''
+Epoch  0  Cost :  20.7291155346
+Epoch  1  Cost :  0.309244243789
+Epoch  2  Cost :  0.11282623102
+Epoch  3  Cost :  0.0604823797043
+Epoch  4  Cost :  0.0439650178732
+Epoch  5  Cost :  0.0346152627274
+Epoch  6  Cost :  0.0221023704333
+Epoch  7  Cost :  0.0127257362007
+Epoch  8  Cost :  0.00712184218778
+Epoch  9  Cost :  0.00326008539236
+Epoch  10  Cost :  0.00070831882133
+Epoch  11  Cost :  0.000294918416479
+Epoch  12  Cost :  4.13290576288e-05
+Epoch  13  Cost :  1.37632589205e-05
+Epoch  14  Cost :  2.21049898844e-07
+Epoch  15  Cost :  1.19497691111e-07
+Epoch  16  Cost :  1.18824735972e-07
+Epoch  17  Cost :  1.18968940907e-07
+Epoch  18  Cost :  1.19097123103e-07
+Epoch  19  Cost :  1.19193259678e-07
+Epoch  20  Cost :  1.19209282445e-07
+Epoch  21  Cost :  1.19209282445e-07
+Epoch  22  Cost :  1.19209282445e-07
+Epoch  23  Cost :  1.19209282445e-07
+Epoch  24  Cost :  1.19209282445e-07
+Epoch  25  Cost :  3.22057335639e-08
+Epoch  26  Cost :  0.0
+Epoch  27  Cost :  0.0
+Epoch  28  Cost :  0.0
+Epoch  29  Cost :  0.0
+Test Accuracy :  0.589744
+'''
