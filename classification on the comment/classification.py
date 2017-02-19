@@ -1,3 +1,7 @@
+'''
+对电影评论进行分类
+'''
+
 import nltk
 import numpy as np
 import random
@@ -7,7 +11,7 @@ sent = "He is a Chinese actress"
 
 from nltk.tokenize import word_tokenize
 
-sent_token = word_tokenize(sent)
+sent_token = word_tokenize(sent) # 英文分词，生成词列表
 print(sent_token)
 """
 ['He', 'is', 'a', 'Chinese', 'actress']
